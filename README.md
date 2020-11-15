@@ -113,7 +113,7 @@ BytedanceUnionAd.RewardedVideoAd.show(slotId, userId)
  * @function RewardedVideoAd.on
  * @param {String} eventType - 事件类型
  * @param {EventCallback | ErrorEventCallback} callback - 事件回调
- * @return {RewardedVideoAd} - 返回 SplashAd 实例
+ * @return {RewardedVideoAd} - 返回 RewardedVideoAd 实例
  */
 RewardedVideoAd.on(eventType, callback)
 

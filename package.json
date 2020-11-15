@@ -30,6 +30,9 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/EricYChu/cordova-plugin-bytedance-union-ad#readme",
+  "bugs": {
+    "url": "https://github.com/EricYChu/cordova-plugin-bytedance-union-ad/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EricYChu/cordova-plugin-bytedance-union-ad.git"
