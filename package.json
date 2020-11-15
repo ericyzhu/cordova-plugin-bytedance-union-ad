@@ -1,0 +1,37 @@
+{
+  "name": "cordova-plugin-bytedance-union-ad",
+  "version": "1.0.0",
+  "description": "Cordova Bytedance UnionAd Plugin.",
+  "cordova": {
+    "id": "cordova-plugin-bytedance-union-ad",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios",
+    "bytedance-unionad"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=9.0.0"
+    },
+    {
+      "name": "cordova-ios",
+      "version": ">=6.0.0"
+    }
+  ],
+  "author": {
+    "name" : "Eric Zhu",
+    "email" : "eric@zhu.email",
+    "url" : "https://github.com/EricYChu"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/EricYChu/cordova-plugin-bytedance-union-ad#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricYChu/cordova-plugin-bytedance-union-ad.git"
+  }
+}
