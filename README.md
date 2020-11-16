@@ -3,7 +3,7 @@
 ## 平台
 
 - iOS
-- Android（暂未实现）
+- Android
 
 ## 安装
 
@@ -16,9 +16,17 @@ cordova plugin add cordova-plugin-bytedance-union-ad
 在 `config.xml` 中配置以下内容。
 
 ```xml
+<!-- iOS -->
 <platform name="ios">
     <config-file target="*-Info.plist" parent="CDVBytedanceUnionAdAppId">
         <string>YOUR_BUAD_APP_ID</string>
+    </config-file>
+</platform>
+
+<!-- Android -->
+<platform name="android">
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <meta-data android:name="CDVBytedanceUnionAdAppId" android:value="YOUR_BUAD_APP_ID" />
     </config-file>
 </platform>
 ```

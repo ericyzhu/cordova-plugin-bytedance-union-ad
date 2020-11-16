@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <plugin id="cordova-plugin-bytedance-union-ad"
-        version="1.0.0"
-        xmlns="http://apache.org/cordova/ns/plugins/1.0">
+        version="1.0.1"
+        xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
     <name>BytedanceUnionAd</name>
     <author>Eric Zhu</author>
@@ -12,19 +13,68 @@
     <issue>https://github.com/EricYChu/cordova-plugin-bytedance-union-ad/issues</issue>
 
     <engines>
-        <engine name="cordova" version=">=9.0.0" />
-        <engine name="cordova-ios" version=">=6.0.0" />
+        <engine name="cordova" version=">=9.0.0"/>
+        <engine name="cordova-ios" version=">=6.0.0"/>
+        <engine name="cordova-android" version=">=9.0.0"/>
     </engines>
 
     <js-module name="BytedanceUnionAd" src="www/bytedance-union-ad.js">
         <clobbers target="BytedanceUnionAd"/>
     </js-module>
 
+
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="BytedanceUnionAd">
+                <param name="android-package" value="cordova.plugins.bytedanceunionad.CDVBytedanceUnionAd"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+            <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+            <uses-permission android:name="android.permission.GET_TASKS"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <provider android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+                      android:authorities="${applicationId}.TTFileProvider"
+                      android:exported="false"
+                      android:grantUriPermissions="true">
+                <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                           android:resource="@xml/bytedanceunionad_file_paths"/>
+            </provider>
+            <provider android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+                      android:authorities="${applicationId}.TTMultiProvider"
+                      android:exported="false"/>
+            <activity android:name="cordova.plugins.bytedanceunionad.SplashActivity"
+                      android:configChanges="keyboard|orientation|screenSize"
+                      android:screenOrientation="portrait"
+                      android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            </activity>
+        </config-file>
+
+        <source-file src="src/android/CDVBytedanceUnionAd.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/TTAdManagerHolder.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/SplashActivity.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/res/layout/bytedanceunionad_activity_splash.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/xml/bytedanceunionad_file_paths.xml" target-dir="res/xml"/>
+        <lib-file src="src/android/libs/open_ad_sdk.aar"/>
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
+    </platform>
+
     <platform name="ios">
         <config-file parent="/*" target="config.xml">
             <feature name="BytedanceUnionAd">
                 <param name="ios-package" value="CDVBytedanceUnionAd"/>
-                <param name="onload" value="true" />
+                <param name="onload" value="true"/>
             </feature>
         </config-file>
 
@@ -34,32 +84,32 @@
         <header-file src="src/ios/Utils/BUDAnimationTool.h"/>
         <source-file src="src/ios/Utils/BUDAnimationTool.m"/>
 
-        <framework src="StoreKit.framework" />
-        <framework src="MobileCoreServices.framework" />
-        <framework src="WebKit.framework" />
-        <framework src="MediaPlayer.framework" />
-        <framework src="CoreMedia.framework" />
-        <framework src="CoreLocation.framework" />
-        <framework src="AVFoundation.framework" />
-        <framework src="CoreTelephony.framework" />
-        <framework src="SystemConfiguration.framework" />
-        <framework src="AdSupport.framework" />
-        <framework src="CoreMotion.framework" />
-        <framework src="Accelerate.framework" />
-        <framework src="ImageIO.framework" />
-        <framework src="libresolv.9.tbd" />
-        <framework src="libc++.tbd" />
-        <framework src="libz.tbd" />
-        <framework src="libsqlite3.tbd" />
-        <framework src="libbz2.tbd" />
-        <framework src="libxml2.tbd" />
+        <framework src="StoreKit.framework"/>
+        <framework src="MobileCoreServices.framework"/>
+        <framework src="WebKit.framework"/>
+        <framework src="MediaPlayer.framework"/>
+        <framework src="CoreMedia.framework"/>
+        <framework src="CoreLocation.framework"/>
+        <framework src="AVFoundation.framework"/>
+        <framework src="CoreTelephony.framework"/>
+        <framework src="SystemConfiguration.framework"/>
+        <framework src="AdSupport.framework"/>
+        <framework src="CoreMotion.framework"/>
+        <framework src="Accelerate.framework"/>
+        <framework src="ImageIO.framework"/>
+        <framework src="libresolv.9.tbd"/>
+        <framework src="libc++.tbd"/>
+        <framework src="libz.tbd"/>
+        <framework src="libsqlite3.tbd"/>
+        <framework src="libbz2.tbd"/>
+        <framework src="libxml2.tbd"/>
 
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Bytedance-UnionAD" spec="~> 3.3.0.5" />
+                <pod name="Bytedance-UnionAD" spec="~> 3.3.0.5"/>
             </pods>
         </podspec>
     </platform>
