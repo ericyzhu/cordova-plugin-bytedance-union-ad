@@ -192,6 +192,15 @@ InterstitialAd.on(eventType, callback)
 BytedanceUnionAd.BannerAd.show(slotId, width, height, align, interval)
 
 /**
+ * 关闭广告。
+ * 
+ * @function BytedanceUnionAd.BannerAd.show
+ * @param {String} slotId - 广告位 ID
+ * @return {BannerAd} - 返回 BannerAd 实例
+ */
+BytedanceUnionAd.BannerAd.hide(slotId)
+
+/**
  * 监听事件。
  * 
  * @function BannerAd.on
@@ -204,10 +213,10 @@ BannerAd.on(eventType, callback)
  ```
 #### 事件类型
 
-- `show` - 广告物料载入成功
+- `show` - 广告物料载入成功。`show' 方法没有此事件
 - `close` - 广告关闭
-- `click` - 广告被点击
-- `error` - 广告物料载入失败或渲染失败
+- `click` - 广告被点击。`show' 方法没有此事件
+- `error` - 广告物料载入失败或渲染失败。`show' 方法没有此事件
 
 
 
