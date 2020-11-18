@@ -167,6 +167,26 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
 
             return true;
         }
+        else if (action.equals("hideBannerAd")) {
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (bannerFragment != null) {
+                        sendPluginResult(bannerFragment.callbackContext, "close", false);
+                        FragmentManager fm = activity.getFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.remove(bannerFragment);
+                        ft.commitAllowingStateLoss();
+                    }
+                    ViewGroup group = activity.findViewById(android.R.id.content);
+                    if (group != null) {
+                        group.removeView(contentView);
+                    }
+                    sendPluginResult(callbackContext, "close", false);
+                }
+            });
+        }
 
         return false;
     }

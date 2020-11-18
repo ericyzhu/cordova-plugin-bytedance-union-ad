@@ -87,6 +87,18 @@ BannerAd.show = function(slotId, width, height, align, interval) {
   return ad;
 };
 
+BannerAd.hide = function(slotId) {
+  var options = {
+    slotId: slotId,
+  };
+  var ad = new BannerAd();
+  var cb = function(event) {
+    ad._eventHandler(event);
+  };
+  exec(cb, cb, 'BytedanceUnionAd', 'hideBannerAd', [options]);
+  return ad;
+};
+
 module.exports = {
   SplashAd: SplashAd,
   RewardedVideoAd: RewardedVideoAd,

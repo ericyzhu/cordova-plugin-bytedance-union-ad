@@ -459,15 +459,19 @@
     [self.bannerView loadAdData];
 }
 
+- (void)hideBannerAd:(CDVInvokedUrlCommand*)command {
+    [self removeBannerAd];
+}
+
 - (void)removeBannerAd {
     if (self.bannerView) {
         [self.bannerView removeFromSuperview];
+        self.bannerView.delegate = nil;
         self.bannerView = nil;
     }
     [self sendPluginResult:self.bannerCommand withType:@"close" keepCallback:NO];
     self.bannerCommand = nil;
 }
-
 
 #pragma mark - BUNativeExpressBannerViewDelegate
 
