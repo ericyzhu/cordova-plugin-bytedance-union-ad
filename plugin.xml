@@ -69,7 +69,7 @@
         <source-file src="src/android/InterstitialAdFragment.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
         <source-file src="src/android/res/layout/bytedanceunionad_activity_splash.xml" target-dir="res/layout"/>
         <source-file src="src/android/res/xml/bytedanceunionad_file_paths.xml" target-dir="res/xml"/>
-        <source-file src="src/android/res/xml/theme_bytedanceunionad.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/values/theme_bytedanceunionad.xml" target-dir="res/values"/>
         <lib-file src="src/android/libs/open_ad_sdk.aar"/>
         <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
     </platform>
