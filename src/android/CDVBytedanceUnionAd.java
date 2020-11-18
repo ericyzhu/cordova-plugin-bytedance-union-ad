@@ -1,20 +1,21 @@
 package cordova.plugins.bytedanceunionad;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
-import com.bytedance.sdk.openadsdk.TTSplashAd;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -29,15 +30,20 @@ import java.util.Objects;
 
 public class CDVBytedanceUnionAd extends CordovaPlugin {
 
-    TTSplashAd mttSplashAd;
-
     TTRewardVideoAd mttRewardVideoAd;
-
-    private FrameLayout mSplashContainer;
 
     public CallbackContext splashAdCallbackContext;
 
     public CallbackContext rewardedVideoAdCallbackContext;
+
+    private InterstitialAdFragment interstitialFragment;
+
+    private BannerAdFragment bannerFragment;
+
+    private RelativeLayout bottomView, contentView;
+
+    private static final int BOTTOM_VIEW_ID = 0x1;
+
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -67,6 +73,9 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
         }
         JSONObject jsonObject = args.getJSONObject(0);
 
+        final Activity activity = cordova.getActivity();
+
+        // Rewarded Video AD
         if ("showRewardedVideoAd".equals(action)) {
             this.rewardedVideoAdCallbackContext = callbackContext;
 
@@ -77,11 +86,9 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
 
             return true;
         }
-
+        // Splash AD
         else if ("showSplashAd".equals(action)) {
             this.splashAdCallbackContext = callbackContext;
-
-            final Activity activity = cordova.getActivity();
 
             String slotId = jsonObject.getString("slotId");
 
@@ -92,6 +99,71 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
             intent.putExtra("slotId", slotId);
 
             activity.startActivity(intent);
+
+            return true;
+        }
+
+        // Interstitial AD
+        else if ("showInterstitialAd".equals(action)) {
+
+            String slotId = jsonObject.getString("slotId");
+            int width = jsonObject.getInt("width");
+            int height = jsonObject.getInt("height");
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentManager fm = activity.getFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    interstitialFragment = InterstitialAdFragment.newInstance(slotId, width, height);
+                    interstitialFragment.setCallbackContext(callbackContext);
+                    ft.add(interstitialFragment, InterstitialAdFragment.class.getSimpleName());
+                    ft.commitAllowingStateLoss();
+                }
+            });
+
+            return true;
+        }
+
+        // Banner AD
+        else if ("showBannerAd".equals(action)) {
+
+            final String slotId = jsonObject.getString("slotId");
+            final int width = jsonObject.getInt("width");
+            final int height = jsonObject.getInt("height");
+            final String align = jsonObject.optString("align");
+            final int interval = jsonObject.getInt("interval");
+
+            activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    bottomView = new RelativeLayout(activity);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    if (align.equalsIgnoreCase("top")) {
+                        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    } else {
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    }
+                    params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    bottomView.setLayoutParams(params);
+                    bottomView.setId(BOTTOM_VIEW_ID);
+
+                    contentView = new RelativeLayout(activity);
+                    contentView.addView(bottomView);
+                    activity.addContentView(contentView, new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT));
+
+                    FragmentManager fm = activity.getFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    bannerFragment = BannerAdFragment.newInstance(slotId, width, height, interval);
+                    bannerFragment.setCallbackContext(callbackContext);
+                    ft.replace(BOTTOM_VIEW_ID, bannerFragment);
+                    ft.commitAllowingStateLoss();
+                }
+            });
 
             return true;
         }
@@ -135,7 +207,6 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
         wm.getDefaultDisplay().getSize(point);
         return point;
     }
-
 
     public void showRewardedVideoAd(String slotId, String userId) {
         final Activity activity = cordova.getActivity();

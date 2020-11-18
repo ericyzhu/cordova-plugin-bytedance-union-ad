@@ -3,12 +3,17 @@
 #import "BUAdSDK/BUSplashAdView.h"
 #import <BUAdSDK/BURewardedVideoAd.h>
 #import <BUAdSDK/BURewardedVideoModel.h>
+#import <BUAdSDK/BUNativeExpressInterstitialAd.h>
+#import <BUAdSDK/BUNativeExpressBannerView.h>
+#import <BUAdSDK/BUAdSDK.h>
 #import "BUDAnimationTool.h"
 
-@interface CDVBytedanceUnionAd () <BUSplashAdDelegate, BUSplashZoomOutViewDelegate, BURewardedVideoAdDelegate>
+@interface CDVBytedanceUnionAd () <BUSplashAdDelegate, BUSplashZoomOutViewDelegate, BURewardedVideoAdDelegate, BUNativeExpresInterstitialAdDelegate, BUNativeExpressBannerViewDelegate>
 @property (nonatomic, assign) CFTimeInterval startTime;
 @property (nonatomic, strong) BUSplashAdView *splashAdView;
 @property (nonatomic, strong) BURewardedVideoAd *rewardedVideoAd;
+@property (nonatomic, strong) BUNativeExpressInterstitialAd *interstitialAd;
+@property(nonatomic, strong) BUNativeExpressBannerView *bannerView;
 @end
 
 @implementation CDVBytedanceUnionAd
@@ -330,6 +335,184 @@
     } else {
         [self sendPluginResult:self.rewardedVideoCommand withType:@"verify:invalid" keepCallback:YES];
     }
+}
+
+
+#pragma mark - Interstitial Ad
+
+- (void)showInterstitialAd:(CDVInvokedUrlCommand *)command {
+    self.interstitialCommand = command;
+
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    NSString *slotId = options[@"slotId"];
+    NSNumber *width = options[@"width"];
+    NSNumber *height = options[@"height"];
+
+    NSValue *sizeValue = [NSValue valueWithCGSize:CGSizeMake([width doubleValue], [height doubleValue])];
+    CGSize size = [sizeValue CGSizeValue];
+    CGFloat adWidth = CGRectGetWidth([UIScreen mainScreen].bounds)-40;
+    CGFloat adHeight = adWidth/size.width*size.height;
+    self.interstitialAd = [[BUNativeExpressInterstitialAd alloc] initWithSlotID:slotId adSize:CGSizeMake(adWidth, adHeight)];
+    self.interstitialAd.delegate = self;
+    [self.interstitialAd loadAdData];
+}
+
+- (void)removeInterstitialAd {
+    if (self.interstitialAd) {
+        self.interstitialAd = nil;
+    }
+    [self sendPluginResult:self.interstitialCommand withType:@"close" keepCallback:NO];
+    self.interstitialCommand = nil;
+}
+
+#pragma mark - BUNativeExpresInterstitialAdDelegate
+
+- (void)nativeExpresInterstitialAdDidLoad:(BUNativeExpressInterstitialAd *)interstitialAd {
+}
+
+- (void)nativeExpresInterstitialAd:(BUNativeExpressInterstitialAd *)interstitialAd didFailWithError:(NSError *)error {
+    NSNumber *code = [NSNumber numberWithLong:error.code];
+    NSString *message = error.description;
+
+    [self sendPluginResult:self.interstitialCommand withType:@"error" code:code message:message keepCallback:YES];
+    [self removeInterstitialAd];
+}
+
+- (void)nativeExpresInterstitialAdRenderSuccess:(BUNativeExpressInterstitialAd *)interstitialAd {
+    [self.interstitialAd showAdFromRootViewController:[self getRootViewControler]];
+}
+
+- (void)nativeExpresInterstitialAdRenderFail:(BUNativeExpressInterstitialAd *)interstitialAd error:(NSError *)error {
+    NSNumber *code = [NSNumber numberWithLong:error.code];
+    NSString *message = error.description;
+
+    [self sendPluginResult:self.interstitialCommand withType:@"error" code:code message:message keepCallback:YES];
+    [self removeInterstitialAd];
+}
+
+- (void)nativeExpresInterstitialAdWillVisible:(BUNativeExpressInterstitialAd *)interstitialAd {
+    [self sendPluginResult:self.interstitialCommand withType:@"show" keepCallback:YES];
+}
+
+- (void)nativeExpresInterstitialAdDidClick:(BUNativeExpressInterstitialAd *)interstitialAd {
+    [self sendPluginResult:self.interstitialCommand withType:@"click" keepCallback:YES];
+}
+
+- (void)nativeExpresInterstitialAdDidClose:(BUNativeExpressInterstitialAd *)interstitialAd {
+    [self removeInterstitialAd];
+}
+
+- (void)nativeExpresInterstitialAdDidCloseOtherController:(BUNativeExpressInterstitialAd *)interstitialAd interactionType:(BUInteractionType)interactionType {
+    [self removeInterstitialAd];
+}
+
+#pragma mark - Banner Ad
+
+- (void)showBannerAd:(CDVInvokedUrlCommand *)command {
+    self.interstitialCommand = command;
+
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    NSString *slotId = options[@"slotId"];
+    NSNumber *width = options[@"width"];
+    NSNumber *height = options[@"height"];
+    NSNumber *interval = options[@"interval"];
+    NSString *align = options[@"align"];
+
+    [self.bannerView removeFromSuperview];
+
+    UIWindow *window = nil;
+    if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(window)]) {
+        window = [[UIApplication sharedApplication].delegate window];
+    }
+    if (![window isKindOfClass:[UIView class]]) {
+        window = [UIApplication sharedApplication].keyWindow;
+    }
+    if (!window) {
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    }
+
+    CGFloat top = 0.0;
+    CGFloat bottom = 0.0;
+    if (@available(iOS 11.0, *)) {
+        top = window.safeAreaInsets.top;
+        bottom = window.safeAreaInsets.bottom;
+    }
+
+    NSValue *sizeValue = [NSValue valueWithCGSize:CGSizeMake([width doubleValue], [height doubleValue])];
+    CGSize size = [sizeValue CGSizeValue];
+    if (interval > 0) {
+        self.bannerView = [[BUNativeExpressBannerView alloc] initWithSlotID:slotId rootViewController:[self getRootViewControler] adSize:size interval:[interval integerValue]];
+    } else {
+        self.bannerView = [[BUNativeExpressBannerView alloc] initWithSlotID:slotId rootViewController:[self getRootViewControler] adSize:size];
+    }
+
+    CGFloat screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
+    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+
+    if ([@"top" isEqualToString:align]) {
+        self.bannerView.frame = CGRectMake((screenWidth-size.width)/2.0, top, size.width, size.height);
+    } else {
+        self.bannerView.frame = CGRectMake((screenWidth-size.width)/2.0, screenHeight-size.height-bottom, size.width, size.height);
+    }
+
+    self.bannerView.delegate = self;
+    [self.bannerView loadAdData];
+}
+
+- (void)removeBannerAd {
+    if (self.bannerView) {
+        [self.bannerView removeFromSuperview];
+        self.bannerView = nil;
+    }
+    [self sendPluginResult:self.bannerCommand withType:@"close" keepCallback:NO];
+    self.bannerCommand = nil;
+}
+
+
+#pragma mark - BUNativeExpressBannerViewDelegate
+
+- (void)nativeExpressBannerAdViewDidLoad:(BUNativeExpressBannerView *)bannerAdView {
+}
+
+- (void)nativeExpressBannerAdView:(BUNativeExpressBannerView *)bannerAdView didLoadFailWithError:(NSError *)error {
+    NSNumber *code = [NSNumber numberWithLong:error.code];
+    NSString *message = error.description;
+
+    [self sendPluginResult:self.bannerCommand withType:@"error" code:code message:message keepCallback:YES];
+    [self removeBannerAd];
+}
+
+- (void)nativeExpressBannerAdViewRenderSuccess:(BUNativeExpressBannerView *)bannerAdView {
+    UIViewController *parentVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+    [parentVC.view addSubview:self.bannerView];
+}
+
+- (void)nativeExpressBannerAdViewRenderFail:(BUNativeExpressBannerView *)bannerAdView error:(NSError *)error {
+    NSNumber *code = [NSNumber numberWithLong:error.code];
+    NSString *message = error.description;
+
+    [self sendPluginResult:self.bannerCommand withType:@"error" code:code message:message keepCallback:YES];
+    [self removeBannerAd];
+}
+
+- (void)nativeExpressBannerAdViewWillBecomVisible:(BUNativeExpressBannerView *)bannerAdView {
+    [self sendPluginResult:self.interstitialCommand withType:@"show" keepCallback:YES];
+}
+
+- (void)nativeExpressBannerAdViewDidClick:(BUNativeExpressBannerView *)bannerAdView {
+    [self sendPluginResult:self.interstitialCommand withType:@"click" keepCallback:YES];
+}
+
+- (void)nativeExpressBannerAdView:(BUNativeExpressBannerView *)bannerAdView dislikeWithReason:(NSArray<BUDislikeWords *> *)filterwords {
+    [UIView animateWithDuration:0.25 animations:^{
+        bannerAdView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self removeBannerAd];
+    }];
+}
+
+- (void)nativeExpressBannerAdViewDidCloseOtherController:(BUNativeExpressBannerView *)bannerAdView interactionType:(BUInteractionType)interactionType {
+    [self removeBannerAd];
 }
 
 @end

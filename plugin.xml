@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <plugin id="cordova-plugin-bytedance-union-ad"
-        version="1.0.1"
+        version="1.0.2"
         xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -57,15 +57,19 @@
             <activity android:name="cordova.plugins.bytedanceunionad.SplashActivity"
                       android:configChanges="keyboard|orientation|screenSize"
                       android:screenOrientation="portrait"
-                      android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+                      android:theme="@style/Theme.BytedanceUnionAd.SplashActivity">
             </activity>
         </config-file>
 
         <source-file src="src/android/CDVBytedanceUnionAd.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
         <source-file src="src/android/TTAdManagerHolder.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
         <source-file src="src/android/SplashActivity.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/AdFragment.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/BannerAdFragment.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
+        <source-file src="src/android/InterstitialAdFragment.java" target-dir="src/cordova/plugins/bytedanceunionad"/>
         <source-file src="src/android/res/layout/bytedanceunionad_activity_splash.xml" target-dir="res/layout"/>
         <source-file src="src/android/res/xml/bytedanceunionad_file_paths.xml" target-dir="res/xml"/>
+        <source-file src="src/android/res/xml/theme_bytedanceunionad.xml" target-dir="res/values"/>
         <lib-file src="src/android/libs/open_ad_sdk.aar"/>
         <framework src="src/android/build.gradle" custom="true" type="gradleReference"/>
     </platform>

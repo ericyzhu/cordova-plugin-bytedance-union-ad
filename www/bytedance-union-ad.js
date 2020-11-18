@@ -51,7 +51,45 @@ RewardedVideoAd.show = function(slotId, userId) {
   return ad;
 };
 
+var InterstitialAd = function() { BaseAd.call(this); };
+InterstitialAd.prototype = new BaseAd();
+
+InterstitialAd.show = function(slotId, width, height) {
+  var options = {
+    slotId: slotId,
+    width: width,
+    height: height,
+  };
+  var ad = new InterstitialAd();
+  var cb = function(event) {
+    ad._eventHandler(event);
+  };
+  exec(cb, cb, 'BytedanceUnionAd', 'showInterstitialAd', [options]);
+  return ad;
+};
+
+var BannerAd = function() { BaseAd.call(this); };
+BannerAd.prototype = new BaseAd();
+
+BannerAd.show = function(slotId, width, height, align, interval) {
+  var options = {
+    slotId: slotId,
+    width: width,
+    height: height,
+    interval: interval || 30,
+    align: align || 'bottom',
+  };
+  var ad = new BannerAd();
+  var cb = function(event) {
+    ad._eventHandler(event);
+  };
+  exec(cb, cb, 'BytedanceUnionAd', 'showBannerAd', [options]);
+  return ad;
+};
+
 module.exports = {
   SplashAd: SplashAd,
   RewardedVideoAd: RewardedVideoAd,
+  InterstitialAd: InterstitialAd,
+  BannerAd: BannerAd,
 };
