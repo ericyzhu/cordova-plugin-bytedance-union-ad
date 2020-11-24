@@ -16,5 +16,6 @@
 - (void)showRewardedVideoAd:(CDVInvokedUrlCommand*)command;
 - (void)showInterstitialAd:(CDVInvokedUrlCommand*)command;
 - (void)showBannerAd:(CDVInvokedUrlCommand*)command;
+- (void)hideBannerAd:(CDVInvokedUrlCommand*)command;
 
 @end

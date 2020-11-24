@@ -22,11 +22,11 @@
         <clobbers target="BytedanceUnionAd"/>
     </js-module>
 
-
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="BytedanceUnionAd">
                 <param name="android-package" value="cordova.plugins.bytedanceunionad.CDVBytedanceUnionAd"/>
+                <param name="onload" value="true"/>
             </feature>
         </config-file>
 
