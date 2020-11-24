@@ -1,11 +1,12 @@
 {
   "name": "cordova-plugin-bytedance-union-ad",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Cordova Bytedance UnionAd Plugin.",
   "cordova": {
     "id": "cordova-plugin-bytedance-union-ad",
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "keywords": [

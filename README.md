@@ -18,22 +18,18 @@ cordova plugin add cordova-plugin-bytedance-union-ad
 ```xml
 <!-- iOS -->
 <platform name="ios">
-    <config-file target="*-Info.plist" parent="CDVBytedanceUnionAdAppId">
-        <string>YOUR_BUAD_APP_ID</string>
-    </config-file>
+    <preference name="CDVBytedanceUnionAdAppId" value="YOUR_BUAD_IOS_APP_ID"/>
 </platform>
 
 <!-- Android -->
 <platform name="android">
-    <config-file target="AndroidManifest.xml" parent="/manifest/application">
-        <meta-data android:name="CDVBytedanceUnionAdAppId" android:value="YOUR_BUAD_APP_ID" />
-    </config-file>
+    <preference name="CDVBytedanceUnionAdAppId" value="YOUR_BUAD_ANDROID_APP_ID"/>
 </platform>
 ```
 
 ## 使用
 
-当成功安装和配置完成后，您可以通过全局变量 `BytedanceUnionAd` 来调用支持的广告类型。目前插件仅实现了开屏广告和激励视频广告。
+当成功安装和配置完成后，您可以通过全局变量 `BytedanceUnionAd` 来调用支持的广告类型。
 
 ### 类型定义
 

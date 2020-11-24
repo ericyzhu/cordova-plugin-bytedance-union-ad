@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <plugin id="cordova-plugin-bytedance-union-ad"
-        version="1.0.6"
+        version="1.0.7"
         xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -88,32 +88,14 @@
         <header-file src="src/ios/Utils/BUDAnimationTool.h"/>
         <source-file src="src/ios/Utils/BUDAnimationTool.m"/>
 
-        <framework src="StoreKit.framework"/>
-        <framework src="MobileCoreServices.framework"/>
-        <framework src="WebKit.framework"/>
-        <framework src="MediaPlayer.framework"/>
-        <framework src="CoreMedia.framework"/>
-        <framework src="CoreLocation.framework"/>
-        <framework src="AVFoundation.framework"/>
-        <framework src="CoreTelephony.framework"/>
-        <framework src="SystemConfiguration.framework"/>
-        <framework src="AdSupport.framework"/>
-        <framework src="CoreMotion.framework"/>
-        <framework src="Accelerate.framework"/>
         <framework src="ImageIO.framework"/>
-        <framework src="libresolv.9.tbd"/>
-        <framework src="libc++.tbd"/>
-        <framework src="libz.tbd"/>
-        <framework src="libsqlite3.tbd"/>
-        <framework src="libbz2.tbd"/>
-        <framework src="libxml2.tbd"/>
 
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Bytedance-UnionAD" spec="~> 3.3.0.5"/>
+                <pod name="Bytedance-UnionAD" spec="~> 3.3.1.5"/>
             </pods>
         </podspec>
     </platform>

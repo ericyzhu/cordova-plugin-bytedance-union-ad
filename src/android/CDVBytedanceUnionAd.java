@@ -55,12 +55,7 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
         final Activity activity = cordova.getActivity();
         Context context = activity.getApplicationContext();
 
-        try {
-            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-            appId = Objects.requireNonNull(ai.metaData.get("CDVBytedanceUnionAdAppId")).toString();
-        } catch (PackageManager.NameNotFoundException exception) {
-            appId = "";
-        }
+        String appId = webView.getPreferences().getString("CDVBytedanceUnionAdAppId", "");
 
         TTAdManagerHolder.init(activity, appId);
     }
