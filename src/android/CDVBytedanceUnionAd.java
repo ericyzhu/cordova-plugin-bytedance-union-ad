@@ -5,8 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,8 +24,6 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Objects;
 
 public class CDVBytedanceUnionAd extends CordovaPlugin {
 
@@ -49,8 +45,6 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
-        String appId;
 
         final Activity activity = cordova.getActivity();
         Context context = activity.getApplicationContext();
@@ -289,8 +283,12 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
                         }
 
                         @Override
-                        public void onRewardVerify(boolean rewardVerify, int rewardAmount, String rewardName) {
-                            sendPluginResult(rewardedVideoAdCallbackContext, rewardVerify ? "verify:valid" : "verify:invalid", true);
+                        public void onRewardVerify(boolean rewardVerify, int rewardAmount, String rewardName, int code, String msg) {
+                            if (rewardVerify) {
+                                sendPluginResult(rewardedVideoAdCallbackContext, "verify:valid", true);
+                            } else {
+                                sendPluginResult(rewardedVideoAdCallbackContext, "verify:invalid", code, msg, true);
+                            }
                         }
 
                         @Override
