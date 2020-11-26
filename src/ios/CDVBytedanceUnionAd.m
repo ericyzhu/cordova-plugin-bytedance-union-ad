@@ -20,7 +20,7 @@
 
 - (void)pluginInitialize
 {
-    NSString *appId = [[self.commandDelegate settings] objectForKey:@"CDVBytedanceUnionAdAppId"];
+    NSString *appId = [self.commandDelegate.settings objectForKey:[@"CDVBytedanceUnionAdAppId" lowercaseString]];
 
     //optional
     //GDPR 0 close privacy protection, 1 open privacy protection
