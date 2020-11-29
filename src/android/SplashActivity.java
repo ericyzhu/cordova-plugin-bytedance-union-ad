@@ -15,7 +15,6 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
 
 import androidx.annotation.MainThread;
-import io.igirl.app.R;
 
 public class SplashActivity extends Activity {
     @SuppressLint("StaticFieldLeak")
@@ -35,8 +34,12 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.bytedanceunionad_activity_splash);
-        mSplashContainer = (FrameLayout) findViewById(R.id.splash_container);
+        String packageName = getApplicationContext().getPackageName();
+        int layoutId = getResources().getIdentifier("bytedanceunionad_activity_splash", "layout", packageName);
+        int containerId = getResources().getIdentifier("bytedanceunionad_splash_container", "id", packageName);
+
+        setContentView(layoutId);
+        mSplashContainer = (FrameLayout) findViewById(containerId);
         mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
         getExtraInfo();
 
