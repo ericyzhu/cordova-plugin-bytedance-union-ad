@@ -81,9 +81,12 @@ abstract public class AdFragment extends DialogFragment {
     }
 
     public void finish() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.remove(this);
-        ft.commitAllowingStateLoss();
+        FragmentManager fm = getFragmentManager();
+        if (fm != null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.remove(this);
+            ft.commitAllowingStateLoss();
+        }
     }
 
     protected boolean retrieveData(Bundle arguments) {

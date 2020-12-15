@@ -279,7 +279,7 @@ public class CDVBytedanceUnionAd extends CordovaPlugin {
 
                         @Override
                         public void onVideoError() {
-                            sendPluginResult(rewardedVideoAdCallbackContext, "play:error", 0, "", true);
+                            sendPluginResult(rewardedVideoAdCallbackContext, "error", 0, "play error", true);
                         }
 
                         @Override
